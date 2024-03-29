@@ -1,0 +1,129 @@
+openapi: 3.0.3
+info:
+  title: Share Post API
+  description: A restful API providing core logic for sharing posts
+  version: "1.0.0"
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+
+paths:
+  /users:
+    get: 
+      summary: Get all users
+      description: This method returns all users contained in the database
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+      security:
+        - bearerAuth: []
+
+  /users/{id}:
+    get:
+      summary: Get a user by id
+      description: This method returns a user by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not Found
+
+  /register:
+    post:
+      summary: Register a new user
+      description: This method registers a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad Request
+
+  /login:
+    post:
+      summary: Login a user
+      description: This method logs in a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '400':
+          description: Bad Request
+
+
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
