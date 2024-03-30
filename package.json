@@ -1,0 +1,37 @@
+{
+  "name": "share-post",
+  "version": "1.0.0",
+  "description": "restful api serving a sharing post web service",
+  "main": "src/server.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npm run build && concurrently \"tsc --watch\" \"nodemon ./dist/server.js\"",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raveeee0/share-post.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raveeee0/share-post/issues"
+  },
+  "homepage": "https://github.com/raveeee0/share-post#readme",
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "@types/mongoose": "^5.11.97",
+    "express": "^4.19.2",
+    "express-validator": "^7.0.1",
+    "mongoose": "^8.2.4",
+    "morgan": "^1.10.0",
+    "typescript": "^5.4.3"
+  },
+  "devDependencies": {
+    "@types/morgan": "^1.9.9",
+    "concurrently": "^8.2.2",
+    "dotenv": "^16.4.5",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2"
+  }
+}

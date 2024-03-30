@@ -1,2 +1,12 @@
+# Project files
 projectrequirements.md
 schedule.md
+
+# Environment variables
+.env
+
+# Output of typescript compilation
+dist/
+
+# Node npm modules
+node_modules/
