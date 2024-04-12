@@ -19,8 +19,15 @@ const connectDatabase = async () => {
     }
 
     console.log(mongoDbUrl)
+    
 
-    mongoose.connect(mongoDbUrl)
+    mongoose.connect(mongoDbUrl, 
+        {
+            authSource: "admin",
+            user: process.env.TEST_MONGODB_USER,
+            pass: process.env.TEST_MONGODB_PASSWORD,
+        }
+    )
         .then(() => console.log("Connected to MongoDB"))
         .catch((error) => console.log("Error connecting to MongoDB", error));
 

@@ -12,8 +12,11 @@ router.get("/", passport.authenticate("jwt", { session: false }), isAdmin, userS
 router.post("/", [
     body("name").isString().notEmpty(),
     body("email").isEmail().notEmpty(),
+    body("password").isString().notEmpty(),
     body("nickname").isString()
 ], userService.createUser);
+
+console.log(process.env.JWT_SECRET)
 
 
 export default router;

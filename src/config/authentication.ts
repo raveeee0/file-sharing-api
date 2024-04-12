@@ -16,7 +16,8 @@ const StrategyOptions: passportjwt.StrategyOptions = {
 const strategy: passportjwt.Strategy = new jwtStrategy(
     StrategyOptions,
     (payload, done) => {
-        userModel.findById(payload.sub)
+        console.log(payload);
+        userModel.findById(payload.id)
             .then((user) => {
                 if(user) {
                     return done(null, user);

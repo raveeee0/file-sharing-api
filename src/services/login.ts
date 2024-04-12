@@ -22,7 +22,7 @@ const loginUser = async (req: express.Request, res: express.Response) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET as string, { expiresIn: "1h" });
+        const token = jwt.sign({ email: user.email, id: user.id }, process.env.JWT_SECRET as string, { expiresIn: "1h" });
         res.status(200).json({ token });
     }
     else {

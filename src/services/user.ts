@@ -1,6 +1,5 @@
 import { validationResult } from 'express-validator';
 import express from 'express';
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 import userModel from '../models/user';
@@ -21,22 +20,33 @@ const createUser = async (req: express.Request, res: express.Response) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
+
     const { name, email, nickname, password } = req.body;
 
     bcrypt.hash(password, 10, (err, hash) => {
-        if (err) 
+        if (err) {
+            console.log('hash')
             return res.status(500).json({ error: err });
-        
-        const user = new userModel({ name, email, nickname, password: hash});
-    
-        user.save()
-            .then((user) => {
-                res.status(201).json(user);
+        }
+
+        userModel.findOne({ roles: { $in: ['admin'] } })
+            .then((admin) => {
+                if (!admin) {
+                    const user = new userModel({ email, name, nickname, password: hash, roles: ['admin'] });
+                    user.save()
+                        .then((user: any) => {
+                            console.log('saved')
+                            res.status(201).json(user);
+                        })
+                        .catch((error: any) => {
+                            console.log('err500')
+                            res.status(500).json({ message: "Error creating user", error });
+                        })
+                }
             })
             .catch((error) => {
                 res.status(500).json({ message: "Error creating user", error });
             });
-
     });
 }
 
