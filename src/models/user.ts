@@ -6,6 +6,7 @@ interface User {
     nickname: String;
     roles: String[];
     password: String;
+    friends: mongoose.Types.ObjectId[];
 }
 
 const userSchema = new mongoose.Schema<User>({
@@ -17,7 +18,8 @@ const userSchema = new mongoose.Schema<User>({
         enum: ['admin', 'user'],
         default: ['user']
       }],
-      password: { type: String, required: true, format: 'password' }
+    password: { type: String, required: true, format: 'password' },
+    friends: [{ type: mongoose.Types.ObjectId, ref: 'User' }]
 });
 
 
