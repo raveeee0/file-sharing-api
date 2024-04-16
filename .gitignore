@@ -10,3 +10,6 @@ dist/
 
 # Node npm modules
 node_modules/
+
+# Start mongodb
+start_mongo.sh
