@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
-  title: Share Post API
-  description: A restful API providing core logic for sharing posts
+  title: Share file API
+  description: A restful API providing core logic for sharing files
   version: "1.0.0"
 
 servers:
@@ -22,6 +22,15 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+              examples:
+                example1:
+                  value:
+                    - id: "123e4567-e89b-12d3-a456-426614174000"
+                      name: "John Doe"
+                      email: "jonsms@mail.com"
+                      password: "hashedpassword"
+                      createdAt: "2021-09-01T10:00:00Z"
+                      updatedAt: "2021-09-01T12:00:00Z"
       security:
         - bearerAuth: []
 
@@ -44,8 +53,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+              examples:
+                example1:
+                  value:
+                    id: "123e4567-e89b-12d3-a456-426614174000"
+                    name: "John Doe"
+                    email: "jonsms@mail.com"
+                    password: "hashedpassword"
+                    createdAt: "2021-09-01T10:00:00Z"
+                    updatedAt: "2021-09-01T12:00:00Z"
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    message: "User not found"
 
   /register:
     post:
@@ -64,6 +93,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+              examples:
+                example1:
+                  value:
+                    id: "123e4567-e89b-12d3-a456-426614174000"
+                    name: "John Doe"
+                    email: "jonsms@mail.com"
+                    password: "hashedpassword"
+                    createdAt: "2021-09-01T10:00:00Z"
+                    updatedAt: "2021-09-01T12:00:00Z"
         '400':
           description: Bad Request
 
@@ -94,10 +132,357 @@ paths:
                 properties:
                   token:
                     type: string
+              examples:
+                example1:
+                  value:
+                    token: "your-jwt-token"
         '400':
           description: Bad Request
 
+  /files:
+    get: 
+      summary: Get all files
+      description: This method returns all files contained in the database
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/File'
+              examples:
+                example1:
+                  value:
+                    - id: "123e4567-e89b-12d3-a456-426614174000"
+                      title: "My file"
+                      description: "This is my file"
+                      creator:
+                        id: "123e4567-e89b-12d3-a456-426614174000"
+                        name: "John Doe"
+                      createdAt: "2021-09-01T10:00:00Z"
+                      url: "http://localhost:3000/files/123e4567-e89b-12d3-a456-426614174000"
+                      likes: 20
+      security:
+        - bearerAuth: []
 
+  /files/{id}:
+    get:
+      summary: Get a file by id
+      description: This method returns a file by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: File id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+              examples:
+                example1:
+                  value:
+                    id: "123e4567-e89b-12d3-a456-426614174000"
+                    title: "My file"
+                    description: "This is my file"
+                    creator:
+                      id: "123e4567-e89b-12d3-a456-426614174000"
+                      name: "John Doe"
+                    createdAt: "2021-09-01T10:00:00Z"
+                    url: "http://localhost:3000/files/123e4567-e89b-12d3-a456-426614174000"
+                    likes: 20
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    message: "File not found"
+
+  /users/{id}/files:
+    get:
+      summary: Get all files by user id
+      description: This method returns all files by user id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/File'
+              examples:
+                example1:
+                  value:
+                    - id: "123e4567-e89b-12d3-a456-426614174000"
+                      title: "My file"
+                      description: "This is my file"
+                      creator:
+                        id: "123e4567-e89b-12d3-a456-426614174000"
+                        name: "John Doe"
+                      createdAt: "2021-09-01T10:00:00Z"
+                      url: "http://localhost:3000/files/123e4567-e89b-12d3-a456-426614174000"
+                      likes: 20
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    message: "User not found"
+      security:
+        - bearerAuth: []
+    post:
+      summary: Add a file
+      description: This method adds a file
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User id
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+              examples:
+                example1:
+                  value:
+                    id: "123e4567-e89b-12d3-a456-426614174000"
+                    title: "My file"
+                    description: "This is my file"
+                    creator:
+                      id: "123e4567-e89b-12d3-a456-426614174000"
+                      name: "John Doe"
+                    createdAt: "2021-09-01T10:00:00Z"
+                    url: "http://localhost:3000/files/123e4567-e89b-12d3-a456-426614174000"
+                    likes: 20
+        '400':
+          description: Bad Request
+
+  /files/{id}/comments:
+    get:
+      summary: Get all comments for a file
+      description: This method returns all comments for a file
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: file id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+              examples:
+                example1:
+                  value:
+                    - id: "123e4567-e89b-12d3-a456-426614174000"
+                      content: "This is a comment"
+                      creator:
+                        id: "123e4567-e89b-12d3-a456-426614174000"
+                        name: "John Doe"
+                      file:
+                        id: "123e4567-e89b-12d3-a456-426614174000"
+                        title: "My file"
+                      createdAt: "2021-09-01T10:00:00Z"
+                      likes: 3
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    message: "file not found"
+      security:
+        - bearerAuth: []
+    post:
+      summary: Add a comment to a file
+      description: This method adds a comment to a file
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: file id
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+              examples:
+                example1:
+                  value:
+                    id: "123e4567-e89b-12d3-a456-426614174000"
+                    content: "This is a comment"
+                    creator:
+                      id: "123e4567-e89b-12d3-a456-426614174000"
+                      name: "John Doe"
+                    file:
+                      id: "123e4567-e89b-12d3-a456-426614174000"
+                      title: "My file"
+                    createdAt: "2021-09-01T10:00:00Z"
+                    likes: 3
+        '400':
+          description: Bad Request
+    delete:
+      summary: Delete a comment
+      description: This method deletes a comment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Comment id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found\
+
+  /files/{id}/like:
+    post:
+      summary: Like a file
+      description: This method allows a user to like a file
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: file id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+
+  /files/{id}/unlike:
+    post:
+      summary: Unlike a file
+      description: This method allows a user to unlike a file
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: file id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+
+  /comments/{id}/like:
+    post:
+      summary: Like a comment
+      description: This method allows a user to like a comment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Comment id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+
+  /comments/{id}/unlike:
+    post:
+      summary: Unlike a comment
+      description: This method allows a user to unlike a comment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Comment id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
 
 components:
   schemas:
@@ -107,20 +492,73 @@ components:
         id:
           type: string
           format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
         name:
           type: string
+          example: John Doe
         email:
           type: string
           format: email
+          example: jonsms@mail.com
         password:
           type: string
           format: password
+          example: hashedpassword
         createdAt:
           type: string
           format: date-time
+          example: 2021-09-01T10:00:00Z
         updatedAt:
           type: string
           format: date-time
+          example: 2021-09-01T12:00:00Z
+
+    File:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        title:
+          type: string
+          example: My file
+        description:
+          type: string
+          example: This is my file
+        creator:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+          example: 2021-09-01T10:00:00Z
+        url:
+          type: string
+        likes:
+          type: integer
+          example: 20
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        content:
+          type: string
+          example: This is a comment
+        creator:
+          $ref: '#/components/schemas/User'
+        file:
+          $ref: '#/components/schemas/File'
+        createdAt:
+          type: string
+          format: date-time
+          example: 2021-09-01T10:00:00Z
+        likes:
+          type: integer
+          example: 3
 
   securitySchemes:
     bearerAuth:

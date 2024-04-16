@@ -1,25 +1,25 @@
 import mongoose from "mongoose";
 
-interface Post {
+interface File {
     title: String;
-    content: String;
+    description: String;
     creator: mongoose.Types.ObjectId;
-    timestamp: Date;
+    createdAt: Date;
     comments: mongoose.Types.ObjectId[];
-    imageUrl: string; // for cloud upload
+    url: string; // for cloud upload
     likes: Number;
 }
 
-const postSchema = new mongoose.Schema<Post>({
+const fileSchema = new mongoose.Schema<File>({
     title: { type: String, required: true },
-    content: { type: String, required: true },
+    description: { type: String, required: true },
     creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-    timestamp: { type: Date, required: true },
+    createdAt: { type: Date, required: true },
     comments: [{ type: mongoose.Types.ObjectId, ref: 'Comment'}],
-    imageUrl: { type: String, required: true },
+    url: { type: String, required: true },
     likes: { type: Number, default: 0 }
 });
 
-const postModel = mongoose.model<Post>('Post', postSchema);
+const fileModel = mongoose.model<File>('File', fileSchema);
 
-export default postModel;
+export default fileModel;
