@@ -35,11 +35,9 @@ const createUser = async (req: express.Request, res: express.Response) => {
                     const user = new userModel({ email, name, nickname, password: hash, roles: ['admin'] });
                     user.save()
                         .then((user: any) => {
-                            console.log('saved')
                             res.status(201).json(user);
                         })
                         .catch((error: any) => {
-                            console.log('err500')
                             res.status(500).json({ message: "Error creating user", error });
                         })
                 }

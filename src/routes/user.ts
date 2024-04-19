@@ -16,7 +16,7 @@ router.post("/", [
     body("nickname").isString()
 ], userService.createUser);
 
-console.log(process.env.JWT_SECRET)
+console.log(process.env.JWT_SECRET);
 
 
 export default router;
