@@ -5,3 +5,5 @@ class NoFileFoundException extends HttpException {
         super(404, message);
     }
 }
+
+export default NoFileFoundException;

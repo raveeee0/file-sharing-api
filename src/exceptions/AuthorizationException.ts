@@ -5,3 +5,5 @@ class AuthorizationException extends HttpException {
         super(403, message);
     }
 }
+
+export default AuthorizationException;
