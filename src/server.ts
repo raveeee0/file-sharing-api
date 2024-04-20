@@ -10,8 +10,6 @@ import loginRouter from "./routes/login";
 import { debug } from "console";
 import { rateLimit } from "express-rate-limit"
 
-import RateLimitError from "./exceptions/RateLimitException";
-
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
@@ -33,17 +31,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.use("/users", userRouter)
-app.use("/login", loginRouter)
+app.use("/users", userRouter);
+app.use("/login", loginRouter);
 
 const server = app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
 });
 
 process.on('SIGTERM', () => {
-    debug('SIGTERM signal received: closing HTTP server')
+    debug('SIGTERM signal received: closing HTTP server');
     server.close(() => {
-        debug('HTTP server closed')
+        debug('HTTP server closed');
     })
 })
   

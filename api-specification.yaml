@@ -10,18 +10,18 @@ servers:
 
 paths:
   /users:
-    get: 
+    get:
       summary: Get all users
       description: This method returns all users contained in the database
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: "#/components/schemas/User"
               examples:
                 example1:
                   value:
@@ -47,12 +47,12 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
               examples:
                 example1:
                   value:
@@ -62,7 +62,7 @@ paths:
                     password: "hashedpassword"
                     createdAt: "2021-09-01T10:00:00Z"
                     updatedAt: "2021-09-01T12:00:00Z"
-        '404':
+        "404":
           description: Not Found
           content:
             application/json:
@@ -76,6 +76,55 @@ paths:
                   value:
                     message: "User not found"
 
+  /users/{id}/files:
+    get:
+      summary: Get all files by user id
+      description: This method returns all files by user id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/File"
+              examples:
+                example1:
+                  value:
+                    - id: "123e4567-e89b-12d3-a456-426614174000"
+                      title: "My file"
+                      description: "This is my file"
+                      creator:
+                        id: "123e4567-e89b-12d3-a456-426614174000"
+                        name: "John Doe"
+                      createdAt: "2021-09-01T10:00:00Z"
+                      url: "http://localhost:3000/files/123e4567-e89b-12d3-a456-426614174000"
+                      likes: 20
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    message: "User not found"
+      security:
+        - bearerAuth: []
+
   /register:
     post:
       summary: Register a new user
@@ -85,14 +134,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
               examples:
                 example1:
                   value:
@@ -102,7 +151,7 @@ paths:
                     password: "hashedpassword"
                     createdAt: "2021-09-01T10:00:00Z"
                     updatedAt: "2021-09-01T12:00:00Z"
-        '400':
+        "400":
           description: Bad Request
 
   /login:
@@ -123,7 +172,7 @@ paths:
                   type: string
                   format: password
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -136,22 +185,22 @@ paths:
                 example1:
                   value:
                     token: "your-jwt-token"
-        '400':
+        "400":
           description: Bad Request
 
   /files:
-    get: 
+    get:
       summary: Get all files
       description: This method returns all files contained in the database
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/File'
+                  $ref: "#/components/schemas/File"
               examples:
                 example1:
                   value:
@@ -166,6 +215,41 @@ paths:
                       likes: 20
       security:
         - bearerAuth: []
+    post:
+      summary: Add a file
+      description: This method adds a file
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
+              examples:
+                example1:
+                  value:
+                    id: "123e4567-e89b-12d3-a456-426614174000"
+                    title: "My file"
+                    description: "This is my file"
+                    creator:
+                      id: "123e4567-e89b-12d3-a456-426614174000"
+                      name: "John Doe"
+                    createdAt: "2021-09-01T10:00:00Z"
+                    url: "http://localhost:3000/files/123e4567-e89b-12d3-a456-426614174000"
+                    likes: 20
+        "400":
+          description: Bad Request
 
   /files/{id}:
     get:
@@ -180,12 +264,12 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: "#/components/schemas/File"
               examples:
                 example1:
                   value:
@@ -198,7 +282,7 @@ paths:
                     createdAt: "2021-09-01T10:00:00Z"
                     url: "http://localhost:3000/files/123e4567-e89b-12d3-a456-426614174000"
                     likes: 20
-        '404':
+        "404":
           description: Not Found
           content:
             application/json:
@@ -211,41 +295,32 @@ paths:
                 example1:
                   value:
                     message: "File not found"
-
-  /users/{id}/files:
-    get:
-      summary: Get all files by user id
-      description: This method returns all files by user id
+    delete:
+      summary: Delete a file by id
+      description: This method deletes a file by id
       parameters:
         - name: id
           in: path
           required: true
-          description: User id
+          description: File id
           schema:
             type: string
             format: uuid
       responses:
-        '200':
-          description: OK
+        "204":
+          description: No Content
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/File'
+                type: object
+                properties:
+                  message:
+                    type: string
               examples:
                 example1:
                   value:
-                    - id: "123e4567-e89b-12d3-a456-426614174000"
-                      title: "My file"
-                      description: "This is my file"
-                      creator:
-                        id: "123e4567-e89b-12d3-a456-426614174000"
-                        name: "John Doe"
-                      createdAt: "2021-09-01T10:00:00Z"
-                      url: "http://localhost:3000/files/123e4567-e89b-12d3-a456-426614174000"
-                      likes: 20
-        '404':
+                    message: "File deleted"
+        "404":
           description: Not Found
           content:
             application/json:
@@ -257,52 +332,9 @@ paths:
               examples:
                 example1:
                   value:
-                    message: "User not found"
+                    message: "File not found"
       security:
         - bearerAuth: []
-    post:
-      summary: Add a file
-      description: This method adds a file
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: User id
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/File'
-              examples:
-                example1:
-                  value:
-                    id: "123e4567-e89b-12d3-a456-426614174000"
-                    title: "My file"
-                    description: "This is my file"
-                    creator:
-                      id: "123e4567-e89b-12d3-a456-426614174000"
-                      name: "John Doe"
-                    createdAt: "2021-09-01T10:00:00Z"
-                    url: "http://localhost:3000/files/123e4567-e89b-12d3-a456-426614174000"
-                    likes: 20
-        '400':
-          description: Bad Request
 
   /files/{id}/comments:
     get:
@@ -317,14 +349,14 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Comment'
+                  $ref: "#/components/schemas/Comment"
               examples:
                 example1:
                   value:
@@ -338,7 +370,7 @@ paths:
                         title: "My file"
                       createdAt: "2021-09-01T10:00:00Z"
                       likes: 3
-        '404':
+        "404":
           description: Not Found
           content:
             application/json:
@@ -374,12 +406,12 @@ paths:
                 content:
                   type: string
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Comment'
+                $ref: "#/components/schemas/Comment"
               examples:
                 example1:
                   value:
@@ -393,24 +425,8 @@ paths:
                       title: "My file"
                     createdAt: "2021-09-01T10:00:00Z"
                     likes: 3
-        '400':
+        "400":
           description: Bad Request
-    delete:
-      summary: Delete a comment
-      description: This method deletes a comment
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Comment id
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-        '404':
-          description: Not Found\
 
   /files/{id}/like:
     post:
@@ -425,9 +441,9 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: OK
-        '404':
+        "404":
           description: Not Found
 
   /files/{id}/unlike:
@@ -443,10 +459,74 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: OK
-        '404':
+        "404":
           description: Not Found
+
+  /comments/{id}:
+    get:
+      summary: Get a comment by id
+      description: This method returns a comment by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Comment id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+              examples:
+                example1:
+                  value:
+                    id: "123e4567-e89b-12d3-a456-426614174000"
+                    content: "This is a comment"
+                    creator:
+                      id: "123e4567-e89b-12d3-a456-426614174000"
+                      name: "John Doe"
+                    file:
+                      id: "123e4567-e89b-12d3-a456-426614174000"
+                      title: "My file"
+                    createdAt: "2021-09-01T10:00:00Z"
+                    likes: 3
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    message: "Comment not found"
+    delete:
+      summary: Delete a comment by id
+      description: This method deletes a comment by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Comment id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+      security:
+        - bearerAuth: []
 
   /comments/{id}/like:
     post:
@@ -461,9 +541,9 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: OK
-        '404':
+        "404":
           description: Not Found
 
   /comments/{id}/unlike:
@@ -479,9 +559,9 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: OK
-        '404':
+        "404":
           description: Not Found
 
 components:
@@ -527,7 +607,7 @@ components:
           type: string
           example: This is my file
         creator:
-          $ref: '#/components/schemas/User'
+          $ref: "#/components/schemas/User"
         createdAt:
           type: string
           format: date-time
@@ -549,9 +629,9 @@ components:
           type: string
           example: This is a comment
         creator:
-          $ref: '#/components/schemas/User'
+          $ref: "#/components/schemas/User"
         file:
-          $ref: '#/components/schemas/File'
+          $ref: "#/components/schemas/File"
         createdAt:
           type: string
           format: date-time
