@@ -4,30 +4,39 @@ import { validationResult } from "express-validator";
 import jwt from 'jsonwebtoken';
 
 import userModel from '../models/user';
+import ValidationError from '../exceptions/ValidationError';
+import AuthenticationException from '../exceptions/AuthenticationException';
 
-const loginUser = async (req: express.Request, res: express.Response) => {
+const loginUser = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return new ValidationError('Validation for user login failed', errors.array());
     }
 
     const { email, password } = req.body;
 
-    const user = await userModel.findOne({ email });
+    userModel.findOne({ email })
+        .then((user) => {
+            if(user) {
+                bcrypt.compare(password, user.password as string)
+                    .then((isMatch) => {
+                        if(!isMatch) {
+                            next(new AuthenticationException("Invalid credentials"));
+                        }
 
-    if(user) {
-        const isMatch = await bcrypt.compare(password, user.password as string);
+                        const token = jwt.sign({ email: user.email, id: user.id }, process.env.JWT_SECRET as string, { expiresIn: "1h" });
+                        res.status(200).json({ token });
+                    });
+            }
+            else {
+                next(new AuthenticationException("User not found"));
+            }
+        })
+        .catch((error) => {
+            next(error);
+        });
 
-        if(!isMatch) {
-            return res.status(401).json({ message: "Invalid credentials" });
-        }
-
-        const token = jwt.sign({ email: user.email, id: user.id }, process.env.JWT_SECRET as string, { expiresIn: "1h" });
-        res.status(200).json({ token });
-    }
-    else {
-        res.status(401).json({ message: "Invalid credentials" });
-    }
+    
 }
 
 export default {loginUser};

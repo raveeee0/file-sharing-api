@@ -6,9 +6,13 @@ import configAuthentication from "./config/authentication";
 
 import userRouter from "./routes/user";
 import loginRouter from "./routes/login";
+import registerRouter from "./routes/register";
+import fileRouter from "./routes/file";
 
 import { debug } from "console";
 import { rateLimit } from "express-rate-limit"
+
+import error from "./middlewares/error";
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -33,6 +37,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/users", userRouter);
 app.use("/login", loginRouter);
+app.use("/register", registerRouter);
+app.use("/files", fileRouter);
+
+
+app.use(error);
+
 
 const server = app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
