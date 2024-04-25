@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Share file API
+  title: File sharing api
   description: A restful API providing core logic for sharing files
   version: "1.0.0"
 
