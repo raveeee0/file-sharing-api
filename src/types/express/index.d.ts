@@ -1,0 +1,9 @@
+import User from '../userInterface';
+
+declare global {
+  namespace Express {
+    export interface Request {
+      user?: User;
+    }
+  }
+}
