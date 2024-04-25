@@ -17,10 +17,10 @@ const loginUser = async (req: express.Request, res: express.Response, next: expr
 
     userModel.findOne({ email })
         .then((user) => {
-            if(user) {
+            if (user) {
                 bcrypt.compare(password, user.password as string)
                     .then((isMatch) => {
-                        if(!isMatch) {
+                        if (!isMatch) {
                             next(new AuthenticationException("Invalid credentials"));
                         }
 
@@ -36,7 +36,7 @@ const loginUser = async (req: express.Request, res: express.Response, next: expr
             next(error);
         });
 
-    
+
 }
 
-export default {loginUser};
+export default { loginUser };

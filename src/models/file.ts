@@ -13,9 +13,9 @@ interface File {
 const fileSchema = new mongoose.Schema<File>({
     title: { type: String, required: true },
     description: { type: String, required: true },
-    creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
+    creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     createdAt: { type: Date, required: true },
-    comments: [{ type: mongoose.Types.ObjectId, ref: 'Comment'}],
+    comments: [{ type: mongoose.Types.ObjectId, ref: 'Comment' }],
     url: { type: String, required: true },
     likes: { type: Number, default: 0 }
 });

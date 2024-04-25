@@ -12,13 +12,13 @@ interface User {
 
 const userSchema = new mongoose.Schema<User>({
     name: { type: String, required: true },
-    email: { type: String, required: true},
+    email: { type: String, required: true },
     nickname: String,
-    roles: [{ 
-        type: String, 
+    roles: [{
+        type: String,
         enum: ['admin', 'user'],
         default: ['user']
-      }],
+    }],
     password: { type: String, required: true, format: 'password' },
     files: [{ type: mongoose.Types.ObjectId, ref: 'File' }],
     friends: [{ type: mongoose.Types.ObjectId, ref: 'User' }]

@@ -11,16 +11,16 @@ function validateToken(req: express.Request, res: express.Response, next: expres
 			next(new AuthenticationException('Token is missing'));
 		} else {
 			passport.authenticate('jwt', { session: false }, (err: Error, user: User) => {
-				if(err) 
+				if (err)
 					next(err);
-				else if(!user)
+				else if (!user)
 					next(new AuthenticationException('Invalid token'));
 				else {
 					req.user = user;
 					next();
 				}
-		})(req, res, next);
-	}
+			})(req, res, next);
+		}
 	}
 };
 

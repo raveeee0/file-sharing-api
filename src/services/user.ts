@@ -58,7 +58,6 @@ const createUser = async (req: express.Request, res: express.Response, next: exp
 
                 userModel.findOne({ email })
                     .then((user) => {
-                        console.log(user);
                         if (user) {
                             next(new UserAlreadyExistsException(email));
                         } else {

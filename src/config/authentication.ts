@@ -1,6 +1,6 @@
 
 import passport from "passport"
-import passportjwt from "passport-jwt"; 
+import passportjwt from "passport-jwt";
 import dotenv from "dotenv";
 import userModel from "../models/user";
 dotenv.config();
@@ -18,7 +18,7 @@ const strategy: passportjwt.Strategy = new jwtStrategy(
     (payload, done) => {
         userModel.findById(payload.id)
             .then((user) => {
-                if(user) {
+                if (user) {
                     return done(null, user);
                 } else {
                     return done(null, false);
