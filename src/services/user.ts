@@ -39,41 +39,31 @@ const createUser = async (req: express.Request, res: express.Response, next: exp
         next(error);
     }
 
-    const { name, email, nickname, password } = req.body;
+    const { name, email, username, password } = req.body;
 
     bcrypt.hash(password, 10, (err, hash) => {
         if (err) {
             return next(err);
         }
 
-        userModel.findOne({ roles: { $in: ['admin'] } })
-            .then((admin) => {
-                // If no admin are present the first registered user will be an admin
-                let roles;
-                if (!admin) {
-                    roles = ['admin'];
+        userModel.findOne({ $or: [{ email }, { username }] })
+            .then((existingUser) => {
+                if (existingUser) {
+                    if (existingUser.email === email) {
+                        next(new UserAlreadyExistsException('Email already exists'));
+                    } else {
+                        next(new UserAlreadyExistsException('Username already exists'));
+                    }
                 } else {
-                    roles = ['user'];
+                    const user = new userModel({ email, name, username, password: hash, role: 'user' });
+                    user.save()
+                        .then((user) => {
+                            res.status(201).json(user);
+                        })
+                        .catch((error) => {
+                            next(error);
+                        });
                 }
-
-                userModel.findOne({ email })
-                    .then((user) => {
-                        if (user) {
-                            next(new UserAlreadyExistsException(email));
-                        } else {
-                            const user = new userModel({ email, name, nickname, password: hash, roles });
-                            user.save()
-                                .then((user) => {
-                                    res.status(201).json(user);
-                                })
-                                .catch((error) => {
-                                    next(error);
-                                })
-                        }
-                    })
-                    .catch((error) => {
-                        next(error);
-                    });
             })
             .catch((error) => {
                 next(error);

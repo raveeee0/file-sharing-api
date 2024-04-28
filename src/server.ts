@@ -10,9 +10,10 @@ import registerRouter from "./routes/register";
 import fileRouter from "./routes/file";
 
 import { debug } from "console";
-import { rateLimit } from "express-rate-limit"
+import { rateLimit } from "express-rate-limit";
+import { Server } from "http";
 
-import error from "./middlewares/error";
+import errorMiddleware from "./middlewares/error";
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -41,10 +42,9 @@ app.use("/register", registerRouter);
 app.use("/files", fileRouter);
 
 
-app.use(error);
+app.use(errorMiddleware);
 
-
-const server = app.listen(process.env.PORT, () => {
+const server: Server = app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
 });
 
@@ -54,3 +54,5 @@ process.on('SIGTERM', () => {
         debug('HTTP server closed');
     })
 })
+
+export default server;

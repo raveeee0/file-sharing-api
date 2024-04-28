@@ -4,8 +4,8 @@ interface User {
     _id: mongoose.Types.ObjectId;
     name: String;
     email: String;
-    nickname: String;
-    roles: String[];
+    username: String;
+    role: String;
     password: String;
     files: mongoose.Types.ObjectId[];
     friends: mongoose.Types.ObjectId[];

@@ -8,12 +8,12 @@ dotenv.config();
 const jwtStrategy = passportjwt.Strategy;
 const extractJwt = passportjwt.ExtractJwt;
 
-const StrategyOptions: passportjwt.StrategyOptions = {
-    secretOrKey: process.env.JWT_SECRET!.toString(),
+const StrategyOptions = {
+    secretOrKey: process.env.JWT_SECRET?.toString() || '',
     jwtFromRequest: extractJwt.fromAuthHeaderAsBearerToken()
 };
 
-const strategy: passportjwt.Strategy = new jwtStrategy(
+const strategy = new jwtStrategy(
     StrategyOptions,
     (payload, done) => {
         userModel.findById(payload.id)

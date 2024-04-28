@@ -2,9 +2,10 @@
   "name": "share-post",
   "version": "1.0.0",
   "description": "restful api serving a sharing post web service",
+  "type": "module",
   "main": "src/server.ts",
   "scripts": {
-    "test": "jest",
+    "test": "sudo ./test/start_mongo_test.sh && jest --detectOpenHandles && sudo ./test/terminate_mongo_test.sh",
     "dev": "npm run build && concurrently \"tsc --watch --build\" \"nodemon ./dist/server.js\"",
     "build": "tsc"
   },
@@ -47,15 +48,21 @@
     "passport-jwt": "^4.0.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.24.4",
+    "@babel/preset-typescript": "^7.24.1",
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.12",
     "@types/morgan": "^1.9.9",
+    "@types/supertest": "^6.0.2",
     "axios": "^1.6.8",
+    "babel-jest": "^29.7.0",
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
     "jest": "^29.7.0",
     "jest-openapi": "^0.14.1",
+    "next": "^14.2.3",
     "nodemon": "^3.1.0",
+    "supertest": "^7.0.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"

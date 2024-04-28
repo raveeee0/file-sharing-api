@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const connectDatabase = async () => {
-    let mongoDbUrl: string = "";
+    let mongoDbUrl = "";
     if (process.env.NODE_ENV === 'test') {
         if (process.env.TEST_MONGODB_USER && process.env.TEST_MONGODB_PASSWORD)
             mongoDbUrl = `mongodb://${process.env.TEST_MONGODB_USER}:${process.env.TEST_MONGODB_PASSWORD}@127.0.0.1:27017/${process.env.TEST_MONGODB_DATABASE}`;
@@ -18,7 +18,7 @@ const connectDatabase = async () => {
         console.log("MongoDB URL is not set");
     }
 
-    console.log(mongoDbUrl)
+    console.log(mongoDbUrl);
 
 
     mongoose.connect(mongoDbUrl,

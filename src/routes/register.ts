@@ -9,7 +9,7 @@ router.post("/", [
     body("name").isString().notEmpty(),
     body("email").isEmail().notEmpty(),
     body("password").isString().notEmpty(),
-    body("nickname").isString()
+    body("username").isString()
 ], userService.createUser);
 
 export default router;
