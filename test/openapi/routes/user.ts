@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userModel from '../../../src/models/user';
 
+import bcrypt from 'bcrypt';
+
 import connectTestDB from '../../config/database';
 
 dotenv.config();
@@ -21,10 +23,11 @@ afterAll(async () => {
 describe('GET /users', () => {
 
     beforeEach(async () => {
+        const password = await bcrypt.hash('123456', 10);
         await userModel.create({
             name: 'John Doe',
             email: 'prova@mail.com',
-            password: '123456',
+            password,
             username: 'john_doe',
             role: 'user',
         });
@@ -51,5 +54,24 @@ describe('GET /users', () => {
         expect(response.body[0].friends).toBeInstanceOf(Array);
         expect(response.body[0]).toHaveProperty('name');
         expect(response.body[0]).toHaveProperty('role');
+
+        expect(response.body[0].name).toBe('John Doe');
+        expect(response.body[0].email).toBe('prova@mail.com');
+
+        const passwordMatches = await bcrypt.compare('123456', response.body[0].password);
+        expect(passwordMatches).toBe(true);
+        expect(response.body[0].username).toBe('john_doe');
+        expect(response.body[0].role).toBe('user');
     });
+
+    it('should return 200 with empty array if no users are found', async () => {
+        await userModel.deleteMany({});
+        const response = await request(server).get('/users');
+
+        expect(response.status).toBe(200);
+        expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
+        expect(response.body).toBeInstanceOf(Array);
+        expect(response.body.length).toBe(0);
+    });
+
 });

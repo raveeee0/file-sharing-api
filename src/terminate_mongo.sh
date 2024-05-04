@@ -15,10 +15,8 @@ sudo rm -rf $TEST_MONGO_PATH/*
 # Reset the MongoDB persistence path
 sudo mkdir -p $TEST_MONGO_PATH
 sudo chown -R mongodb:mongodb $TEST_MONGO_PATH
+sudo chown mongodb:mongodb /tmp/mongodb-$TEST_MONGO_PORT.sock    
 
-if [ -S /tmp/mongodb-$TEST_MONGO_PORT.sock ]; then
-    sudo chown mongodb:mongodb /tmp/mongodb-$TEST_MONGO_PORT.sock    
-fi
 
 
 echo "MongoDB instance has been stopped"

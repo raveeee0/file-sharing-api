@@ -18,8 +18,6 @@ const connectDatabase = async () => {
         console.log("MongoDB URL is not set");
     }
 
-    console.log(mongoDbUrl);
-
 
     mongoose.connect(mongoDbUrl,
         {
