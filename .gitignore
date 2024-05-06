@@ -13,3 +13,6 @@ node_modules/
 
 # Start mongodb
 start_mongo.sh
+
+# Visual studio code settings
+.vscode/

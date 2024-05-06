@@ -6,11 +6,10 @@ source .env
 
 # Check if the path in TEST_MONGO_PATH exists, if not create the folders
 if [ ! -d "$TEST_MONGO_PATH" ]; then
-    mkdir -p "$TEST_MONGO_PATH"
+    sudo mkdir -p "$TEST_MONGO_PATH"
 fi
 
 # Create a dedicate user for the MongoDB instance if it does not exist
-
 if ! id -u mongodb &>/dev/null; then
     printf "Creating mongodb user\n"
     sudo useradd -r mongodb
@@ -27,7 +26,6 @@ if ! grep -q "mongodb" /etc/security/limits.conf; then
     sudo bash -c "echo 'mongodb soft nofile 64000' >> /etc/security/limits.conf"
     sudo bash -c "echo 'mongodb hard nofile 64000' >> /etc/security/limits.conf"
 fi
-
 
 # Start MongoDB without authentication (redirect output to /dev/null)
 printf "Starting MongoDB to configure authentication\n"

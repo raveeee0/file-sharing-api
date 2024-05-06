@@ -5,7 +5,7 @@
   "type": "module",
   "main": "src/server.ts",
   "scripts": {
-    "test": "./test/start_mongo_test.sh && jest --detectOpenHandles && ./test/terminate_mongo_test.sh",
+    "test": "./test/start_mongo_test.sh; jest --detectOpenHandles; ./test/terminate_mongo_test.sh",
     "dev": "npm run build && concurrently \"tsc --watch --build\" \"nodemon ./dist/server.js\"",
     "build": "tsc"
   },
