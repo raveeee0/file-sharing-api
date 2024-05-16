@@ -1,5 +1,5 @@
 import express from "express";
-import User from "../types/userInterface";
+import {User} from "../types/userInterface";
 
 import NoUserFoundException from "../exceptions/NoUserFoundException";
 import fileModel from "../models/file";

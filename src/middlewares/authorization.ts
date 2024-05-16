@@ -8,4 +8,11 @@ const isAdmin = (req: any, res: express.Response, next: express.NextFunction) =>
 	next();
 }
 
-export default isAdmin;
+const isAuthenticated = (req: any, res: express.Response, next: express.NextFunction) => {
+	if (!req.user) {
+		return res.status(401).json({ message: 'Unauthorized, user is not authenticated' });
+	}
+	next();
+}
+
+export { isAdmin, isAuthenticated };

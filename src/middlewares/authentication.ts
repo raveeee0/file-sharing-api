@@ -1,7 +1,7 @@
 import express from 'express';
 import AuthenticationException from '../exceptions/AuthenticationException';
 import passport from 'passport';
-import User from '../types/userInterface';
+import {User} from '../types/userInterface';
 
 function validateToken(req: express.Request, res: express.Response, next: express.NextFunction) {
 	if (!req.user) {

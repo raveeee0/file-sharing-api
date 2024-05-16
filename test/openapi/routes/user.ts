@@ -4,7 +4,9 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userModel from '../../../src/models/user';
 import NoUserFoundException from '../../../src/exceptions/NoUserFoundException';
-import User from '../../../src/types/userInterface';
+import {userProperties} from '../../../src/types/userInterface';
+
+import { publicVisibleProperties, userVisibleProperties, adminVisibleProperties } from '../../../src/types/userInterface';
 
 
 import bcrypt from 'bcrypt';
@@ -50,10 +52,9 @@ describe('GET /users', () => {
         expect(response.body).toBeInstanceOf(Array);
         expect(response.body.length).toBe(1);
 
-        
-        // for (const prop in User) {
-        //     expect(response.body[0]).toHaveProperty(prop);
-        // }
+
+        for(let i = 0; i < userProperties.length; i++) 
+            expect(response.body[0]).toHaveProperty(userProperties[i]);
 
         expect(response.body[0].files).toBeInstanceOf(Array);
         expect(response.body[0].friends).toBeInstanceOf(Array);
@@ -92,12 +93,16 @@ describe('GET /users/:id', () => {
 
     beforeEach(async () => {
         const password = await bcrypt.hash('333333', 10);
-        await userModel.create({
+        userModel.create({
             name: 'John Doe',
             email: 'prova@mail.com',
             password,
             username: 'john_doee',
             role: 'admin',
+        }).then((user) => {
+            console.log("Loaded")
+        }).catch((error) => {
+            console.log("Error")
         });
     });
 
@@ -110,9 +115,8 @@ describe('GET /users/:id', () => {
 
         if (user) {
             const response = await request(server).get(`/users/${user._id}`);
-
+            
             expect(response.status).toBe(200);
-            console.log(response.body);
             expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
             expect(response.body).toBeInstanceOf(Object);
             
@@ -139,8 +143,6 @@ describe('GET /users/:id', () => {
         expect(response.status).toBe(404);
         expect(response.headers['content-type']).toBe('application/json; charset=utf-8');
         expect(response.body).toBeInstanceOf(Object);
-
-
     });
 
 });

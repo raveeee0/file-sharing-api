@@ -7,6 +7,9 @@ import NoUserFoundException from '../exceptions/NoUserFoundException';
 import ValidationError from '../exceptions/ValidationError';
 import UserAlreadyExistsException from '../exceptions/UserAlreadyExistsException';
 
+import { publicVisibleProperties, userVisibleProperties, adminVisibleProperties } from '../types/userInterface';
+import { isAdmin, isAuthenticated } from '../middlewares/authorization';
+
 const getUsers = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     userModel.find()
         .then((users) => {
@@ -22,7 +25,7 @@ const getUser = async (req: express.Request, res: express.Response, next: expres
     userModel.findById(id)
         .then((user) => {
             if (user) {
-                res.status(200).json(user);
+                res.status(200).json(filterUser(req.user, user));
             } else {
                 next(new NoUserFoundException(id));
             }
@@ -88,3 +91,20 @@ const getUserFiles = async (req: express.Request, res: express.Response, next: e
 }
 
 export { getUsers, getUser, createUser, getUserFiles };
+
+function filterUser(req: any, user: any) {
+    if(req.user && req.user.role && req.user.role == 'admin')
+        return filterProperties(user, adminVisibleProperties);
+    else if(req.user)
+        return filterProperties(user, userVisibleProperties);
+    else
+        return filterProperties(user, publicVisibleProperties);
+}
+
+function filterProperties(user: any, properties: string[]) {
+    const filteredUser: any = {};
+    properties.forEach((property) => {
+        filteredUser[property] = user[property];
+    });
+    return filteredUser;
+}

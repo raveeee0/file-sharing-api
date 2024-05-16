@@ -23,8 +23,8 @@ fi
 # Increase the limit of open files if not already set
 if ! grep -q "mongodb" /etc/security/limits.conf; then
     printf "Increasing the limit of open files for the mongodb user\n"
-    sudo bash -c "echo 'mongodb soft nofile 64000' >> /etc/security/limits.conf"
-    sudo bash -c "echo 'mongodb hard nofile 64000' >> /etc/security/limits.conf"
+    echo 'mongodb soft nofile 64000' | sudo tee -a /etc/security/limits.conf
+    echo 'mongodb hard nofile 64000' | sudo tee -a /etc/security/limits.conf
 fi
 
 # Start MongoDB without authentication (redirect output to /dev/null)
